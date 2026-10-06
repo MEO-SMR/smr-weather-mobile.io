@@ -4650,6 +4650,8 @@ function attachPlainPinchZoom(container, img){
         renderImpacts(_latestOWM);
         renderActions(_latestOWM);
         renderHazardChips(_latestOWM);
+      } else {
+        window.setDashboardRefreshMode?.(sev.label === "Tropical Cyclone");
       }
 
       const sourceTime = meta.sourceTime || meta.updatedAt || meta.timestamp || null;
@@ -5325,6 +5327,13 @@ function updateSanMateoPopup(marker, data){
       }
 
       const a = analyzeWeather(data);
+      const hasTropicalCyclone =
+        _synopsisSev?.label === "Tropical Cyclone" ||
+        (data.alerts || []).some(alert =>
+          /typhoon|tropical\s+cyclone|tropical\s+storm|tropical\s+depression/i.test(alert.event || "")
+        );
+      window.setDashboardRefreshMode?.(hasTropicalCyclone || a.rainLevel === "sev");
+
       if (a.rainLevel === 'sev')       chips.push({ lvl:'sev',  text:'Heavy rain',     emoji:'🌧️' });
       else if (a.rainLevel === 'warn') chips.push({ lvl:'warn', text:'Rain likely',    emoji:'🌦️' });
       if (a.hasThunder)                chips.push({ lvl:'warn', text:'Thunderstorms',  emoji:'⛈️' });
@@ -6437,6 +6446,49 @@ function updateSanMateoPopup(marker, data){
 
   window.WaterLevelCardsModule = { init, refresh };
   document.addEventListener("DOMContentLoaded", init, { once: true });
+})();
+</script>
+
+<script>
+(function () {
+  const NORMAL_REFRESH_MS = 15 * 60 * 1000;
+  const SEVERE_REFRESH_MS = 5 * 60 * 1000;
+  let severeWeatherActive = false;
+  let reloadTimer = null;
+  let reloadAt = Date.now() + NORMAL_REFRESH_MS;
+
+  function scheduleReload(delay) {
+    window.clearTimeout(reloadTimer);
+    reloadAt = Date.now() + delay;
+    reloadTimer = window.setTimeout(function () {
+      reloadTimer = null;
+      if (!document.hidden) window.location.reload();
+    }, delay);
+  }
+
+  window.setDashboardRefreshMode = function (isSevere) {
+    const nextMode = Boolean(isSevere);
+    if (nextMode === severeWeatherActive) return;
+
+    severeWeatherActive = nextMode;
+    scheduleReload(severeWeatherActive ? SEVERE_REFRESH_MS : NORMAL_REFRESH_MS);
+    console.info(
+      `Dashboard will reload every ${severeWeatherActive ? 5 : 15} minutes.`,
+      severeWeatherActive ? "Tropical cyclone or heavy-rain condition detected." : "No active severe-weather condition detected."
+    );
+  };
+
+  scheduleReload(NORMAL_REFRESH_MS);
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) return;
+    const remaining = reloadAt - Date.now();
+    if (remaining <= 0) {
+      window.location.reload();
+    } else if (reloadTimer === null) {
+      scheduleReload(remaining);
+    }
+  });
 })();
 </script>
 
