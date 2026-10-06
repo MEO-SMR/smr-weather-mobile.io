@@ -1,0 +1,27 @@
+{
+  "id": "./",
+  "name": "San Mateo Weather & Situational Dashboard",
+  "short_name": "San Mateo Weather",
+  "description": "Weather and situational dashboard for San Mateo, Rizal.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f8fafc",
+  "theme_color": "#0d6efd",
+  "icons": [
+    {
+      "src": "./icons/weather-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/weather-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
