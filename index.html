@@ -4,6 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>San Mateo Weather & Situational Dashboard</title>
+  <meta name="theme-color" content="#0d6efd" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="San Mateo Weather" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icons/weather-icon-192.png" />
   <!-- Refactored architecture: centralized configuration, core utilities, scalable modules -->
 
   <!-- Favicon -->
@@ -2508,6 +2514,7 @@ main > .card:first-child #actions-ai-note{
     <div class="chip"><span>PH Time:</span><span id="ph-time">--:--:--</span></div>
     <div class="chip"><span>Updated:</span><span id="last-updated">—</span></div>
     <span id="status-severity"></span>
+    <button id="install-app" class="btn btn-sm btn-light fw-semibold" type="button" hidden>Install app</button>
   </div>
 
   <main class="container py-3">
@@ -6471,6 +6478,56 @@ function updateSanMateoPopup(marker, data){
 
   // If your render functions replace the tbody HTML, call this again:
   window._refreshResponsiveTables = init;
+})();
+</script>
+
+<script>
+(function () {
+  const installButton = document.getElementById("install-app");
+  if (!installButton) return;
+
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+  if (isStandalone) return;
+
+  const isAppleMobile = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  let installPrompt = null;
+
+  if (isAppleMobile) {
+    installButton.hidden = false;
+    installButton.addEventListener("click", function () {
+      window.alert('To install this app, tap the Share button in Safari, then choose "Add to Home Screen".');
+    });
+  }
+
+  window.addEventListener("beforeinstallprompt", function (event) {
+    event.preventDefault();
+    installPrompt = event;
+    installButton.hidden = false;
+  });
+
+  installButton.addEventListener("click", async function () {
+    if (!installPrompt) return;
+
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    installPrompt = null;
+    installButton.hidden = true;
+  });
+
+  window.addEventListener("appinstalled", function () {
+    installPrompt = null;
+    installButton.hidden = true;
+  });
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("./service-worker.js").catch(function (error) {
+        console.error("Service worker registration failed:", error);
+      });
+    });
+  }
 })();
 </script>
 
