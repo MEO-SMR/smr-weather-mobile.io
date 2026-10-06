@@ -1,0 +1,41 @@
+{
+  "app": {
+    "name": "San Mateo Weather & Situational Dashboard",
+    "version": "2.3.4",
+    "timezone": "Asia/Manila",
+    "locale": "en-PH"
+  },
+  "location": {
+    "name": "San Mateo, Rizal",
+    "shortName": "San Mateo, PH",
+    "lat": 14.695151709155798,
+    "lon": 121.11788215916273
+  },
+  "refresh": {
+    "clock": 1000,
+    "weather": 150000,
+    "youtube": 150000,
+    "ffwws": 3600000,
+    "images": 1800000
+  },
+  "api": {
+    "openWeatherKey": "662bc47b0b806958a77b4b260951abb8",
+    "endpoint": "https://script.google.com/macros/s/AKfycbwtPUx2qBvOAqj_pBu-IFf3bu2qb8mhtl8LhgadDQjTqq3ScQ8lU7meOHzDeh-uaFc_/exec",
+    "youtubeProxy": "https://script.google.com/macros/s/AKfycbyH863c0eEqFXlcHrPmpGSTQvDBdz392wG_DYrTqUG1R7-T5KTKTEWonWvVaLsggHL8/exec",
+    "ffwwsProxy": "https://script.google.com/macros/s/AKfycbwEWW19UTzIDt_5D_wgwP24xeqMX7c5me6WnQ5_dJ_tMoNpJJiBOs7k7f1CZz4GiudNDw/exec",
+    "pagasaSynopsisProxy": "https://script.google.com/macros/s/AKfycbzq9RMWg6dTZMpv9QKctHpc3-bPa0uCslgcN0z36AvKoYKD67tx_lyctFuZJ0llWFsF/exec"
+  },
+  "youtube": {
+    "channelId": "UCpyLikj1x70S8UPxVqsPr6g",
+    "streamsUrl": "https://www.youtube.com/@DOST_PAGASA/streams",
+    "videosUrl": "https://www.youtube.com/@DOST_PAGASA/videos",
+    "embedBase": "https://www.youtube.com/embed/"
+  },
+  "external": {
+    "pagasaDaily": "https://www.pagasa.dost.gov.ph/tropical-cyclone-advisory-iframe",
+    "panahon": "https://www.panahon.gov.ph/",
+    "ffwws": "https://pasig-marikina-tullahanffws.pagasa.dost.gov.ph/water/table.do",
+    "zoomEarth": "https://zoom.earth/",
+    "windy": "https://www.windy.com/?14.695,121.118,10,i:pressure"
+  }
+}
